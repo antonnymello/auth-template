@@ -1,34 +1,14 @@
 import Image from 'next/image';
-import {
-  Box,
-  Button,
-  chakra,
-  Container,
-  Flex,
-  Input,
-  Text,
-} from '@chakra-ui/react';
+import { Box, Button, Container, Flex, Input, Text } from '@chakra-ui/react';
 import type { NextPage } from 'next';
-
-interface TextHighlightProps {
-  children: React.ReactNode;
-  onClick: () => void;
-}
-
-const TextHighlight = ({ children, onClick }: TextHighlightProps) => {
-  return (
-    <chakra.span
-      fontWeight='bold'
-      textDecoration='underline'
-      cursor='pointer'
-      onClick={onClick}
-    >
-      {children}
-    </chakra.span>
-  );
-};
+import TextHighlight from '../components/TextHighlight';
+import { useState } from 'react';
 
 const Home: NextPage = () => {
+  const [page, setPage] = useState<'login' | 'register'>('login');
+
+  const isLoginPage = page === 'login';
+
   return (
     <Flex
       justifyContent='space-between'
@@ -56,11 +36,12 @@ const Home: NextPage = () => {
       >
         <Container padding='2rem'>
           <Text fontSize='3xl' mb='1rem'>
-            Welcome back
+            {isLoginPage ? 'Welcome back' : 'Register your account'}
           </Text>
 
           <Text mt='1rem'>E-mail:</Text>
           <Input
+            type='email'
             borderColor='gray.500'
             focusBorderColor='gray.600'
             placeholder='Type you e-mail here'
@@ -69,6 +50,7 @@ const Home: NextPage = () => {
 
           <Text mt='1rem'>Password:</Text>
           <Input
+            type='password'
             borderColor='gray.500'
             focusBorderColor='gray.600'
             placeholder='Type you e-mail here'
@@ -83,7 +65,7 @@ const Home: NextPage = () => {
             size='sm'
             mt='2.5rem'
           >
-            Sign in
+            {isLoginPage ? 'Sign in' : 'Sign up'}
           </Button>
 
           <Button
@@ -100,12 +82,22 @@ const Home: NextPage = () => {
               height={18}
               alt="Google's Logo"
             />
-            Login with Google account
+            {isLoginPage
+              ? 'Login with Google account'
+              : 'Sign up with Google account'}
           </Button>
 
-          <Text mt='1rem'>
-            Don&apos;t have an account?{' '}
-            <TextHighlight onClick={console.log}>Sign up</TextHighlight>
+          <Text mt='1rem' userSelect='none'>
+            {isLoginPage
+              ? "Don't have an account? "
+              : 'Already have an account? '}
+            <TextHighlight
+              onClick={() =>
+                isLoginPage ? setPage('register') : setPage('login')
+              }
+            >
+              Sign up
+            </TextHighlight>
           </Text>
         </Container>
       </Box>
